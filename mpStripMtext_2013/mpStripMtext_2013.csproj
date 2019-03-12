@@ -74,6 +74,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\mpStripMtext_16x16.png" />
+    <Resource Include="Resources\mpStripMtext_16x16_dark.png" />
+    <Resource Include="Resources\mpStripMtext_32x32.png" />
+    <Resource Include="Resources\mpStripMtext_32x32_dark.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Debug (

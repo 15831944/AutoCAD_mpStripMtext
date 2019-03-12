@@ -27,7 +27,8 @@
                     win.LbFormatItems.ItemsSource = GetStripFormatItems();
                     if (win.ShowDialog() == true)
                     {
-                        SaveStripFormatItems(win.LbFormatItems.ItemsSource.Cast<StripFormatItem>());
+                        var stripFormatItems = win.LbFormatItems.ItemsSource.Cast<StripFormatItem>();
+                        SaveStripFormatItems(stripFormatItems);
                     }
                 }
             }

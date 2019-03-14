@@ -7,6 +7,8 @@
         public StripSettings()
         {
             InitializeComponent();
+
+            Title = ModPlusAPI.Language.GetFunctionLocalName("mpStripMtext", new ModPlusConnector().LName);
         }
 
         private void BtCheckAll_OnClick(object sender, RoutedEventArgs e)

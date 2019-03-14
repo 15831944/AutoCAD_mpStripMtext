@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mps="https://modplus.org/winfx/xaml/controls"
              xmlns:local="clr-namespace:mpStripMtext" ResizeMode="NoResize"
-             Height="300" Width="500">
+             Height="300" Width="480">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" 
-                  Header="Select type of formatting to remove">
+                  Header="{Binding Source={StaticResource Lang}, XPath=h1}">
             <ListBox Margin="0" BorderThickness="0" Name="LbFormatItems">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource ModPlusListBoxItem}">
@@ -37,7 +37,8 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="local:StripFormatItem">
                         <CheckBox IsChecked="{Binding Path=Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Margin="0 0 10 0">
+                                  Margin="0 0 5 0"
+                                  ToolTip="{Binding Path=ToolTip}">
                             <TextBlock Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"
                                        Text="{Binding Path=DisplayName, Mode=OneWay}"></TextBlock>
                         </CheckBox>
@@ -48,7 +49,7 @@
         <!-- buttons -->
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
             <Button Style="{DynamicResource ModPlusFlatButton}" MinWidth="0" Padding="2"
-                    Margin="2 4 4 4"
+                    Margin="2 4 4 4" ToolTip="{Binding Source={StaticResource Lang}, XPath=h2}"
                     Name="BtCheckAll" Click="BtCheckAll_OnClick">
                 <Viewbox Width="24" Height="24">
                     <Canvas Width="24" Height="24">
@@ -58,7 +59,7 @@
                 </Viewbox>
             </Button>
             <Button Style="{DynamicResource ModPlusFlatButton}" MinWidth="0" Padding="2"
-                    Margin="2 4 4 4"
+                    Margin="2 4 4 4" ToolTip="{Binding Source={StaticResource Lang}, XPath=h3}"
                     Name="BtUncheckAll" Click="BtUncheckAll_OnClick">
                 <Viewbox Width="24" Height="24">
                     <Canvas Width="24" Height="24">
@@ -71,6 +72,6 @@
         <!-- accept -->
         <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
                 Name="BtAccept" Click="BtAccept_OnClick"
-                Content="Accept"></Button>
+                Content="{Binding Source={StaticResource Lang}, XPath=h4}"></Button>
     </Grid>
 </mps:ModPlusWindow>

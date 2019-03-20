@@ -105,7 +105,6 @@
 
         public string StripFormat(string symbolString, List<string> formatsAsList)
         {
-            // var formatsAsList = FormatsToList(formats);
 
             string Replace(string newStr, Regex pat, string oldStr)
             {
@@ -224,25 +223,6 @@
                 var noBracesText = Replace(string.Empty, new Regex("[{}]"), str);
 
                 return noBracesText;
-                ////var matches = Execute(new Regex("{[^\\\\]+}"), str);
-                ////foreach (var match in matches)
-                ////{
-                ////    var origstr = match.Groups[0].Value;
-                ////    var tempstr = Replace(string.Empty, new Regex("[{}]"), str);
-                ////    str = str.Replace(origstr, tempstr);
-                ////}
-
-                ////var len = str.Length;
-                ////if (123 == (int)str[1] && 125 == str[len])
-                ////{
-                ////    var teststr = str.Substring(2);
-                ////    ////(setq teststr (substr teststr 1 (1- (strlen teststr))))
-                ////    ////(not (vl-string-search "{" teststr))
-                ////    ////(not (vl-string-search "}" teststr))
-                ////    str = teststr;
-                ////}
-
-                //return str;
             }
 
             //var slahFlag = $"<{DateTime.Now.Ticks}>";
@@ -281,10 +261,7 @@
             text = Apply(text, "W", Width);
             text = Apply(text, "Z", HardSpace); // replaced from ~
 
-            //text = Replace("\\\\", new Regex(slahFlag), text);
             text = Braces(text);
-            //text = Replace("\\{", new Regex(lbrace), text);
-            //text = Replace("\\}", new Regex(rbrace), text);
 
             return text;
         }
@@ -317,8 +294,6 @@
 
         public void StripTable(Table table, List<string> formats)
         {
-            ////using (var mText = new MText())
-            ////{
                 for (int r = 0; r < table.Rows.Count; r++)
                 {
                     for (int c = 0; c < table.Columns.Count; c++)
@@ -332,7 +307,6 @@
                         }
                     }
                 }
-            ////}
         }
 
         public void StripMLeader(MLeader mLeader, List<string> formats)

@@ -103,6 +103,8 @@
 
         // https://knowledge.autodesk.com/support/autocad-lt/learn-explore/caas/CloudHelp/cloudhelp/2019/ENU/AutoCAD-LT/files/GUID-7D8BB40F-5C4E-4AE5-BD75-9ED7112E5967-htm.html
 
+        // for K: (?<g>{\\K(?<sg>.*?)})
+
         public string StripFormat(string symbolString, List<string> formatsAsList)
         {
 
@@ -194,6 +196,13 @@
                 return Replace(string.Empty, new Regex("\\\\Q[-]?[0-9]*?[.]?[0-9]+;"), str);
             }
 
+            //S format
+            string Stacking(string str)
+            {
+                str = Alignment(str);
+                return Replace(string.Empty, new Regex("\\\\S"), str);
+            }
+
             //T format
             string Tracking(string str)
             {
@@ -256,12 +265,13 @@
             text = Apply(text, "O", Overline);
             text = Apply(text, "Q", Oblique);
             text = Apply(text, "P", Paragraph);
+            text = Apply(text, "S", Stacking);
             text = Apply(text, "T", Tracking);
             text = Apply(text, "U", Underline);
             text = Apply(text, "W", Width);
             text = Apply(text, "Z", HardSpace); // replaced from ~
 
-            text = Braces(text);
+            //text = Braces(text);
 
             return text;
         }

@@ -150,13 +150,6 @@
             //B format
             string Tab(string str)
             {
-                //var matches = Execute(new Regex(@"\\\\P\\t|[0-9]+;\\t"), str);
-                //foreach (var match in matches)
-                //{
-                //    var origstr = match.Groups[1].Value;
-                //    var tempstr = Replace(string.Empty, new Regex(@"\\\\A[012];"), str);
-                //    str = str.Replace(origstr, tempstr);
-                //}
                 return Replace(" ", new Regex("\\t"), str);
             }
 
@@ -199,8 +192,27 @@
             //S format
             string Stacking(string str)
             {
+                var kRegex = new Regex("{\\\\S(?<numbers>\\s*\\d+\\/\\d+);");
+                if (!kRegex.IsMatch(str))
+                    return str;
+
                 str = Alignment(str);
-                return Replace(string.Empty, new Regex("\\\\S"), str);
+
+                var match = kRegex.Matches(str)[0];
+                str = str.Replace(match.Value, match.Groups["numbers"].Value);
+                return Stacking(str);
+            }
+
+            //K format
+            string StrikeThrough(string str)
+            {
+                var kRegex = new Regex("{\\\\K(?<text>.?)}");
+                if (!kRegex.IsMatch(str))
+                    return str;
+
+                var match = kRegex.Matches(str)[0];
+                str = str.Replace(match.Value, match.Groups["text"].Value);
+                return StrikeThrough(str);
             }
 
             //T format
@@ -266,12 +278,13 @@
             text = Apply(text, "Q", Oblique);
             text = Apply(text, "P", Paragraph);
             text = Apply(text, "S", Stacking);
+            text = Apply(text, "K", StrikeThrough);
             text = Apply(text, "T", Tracking);
             text = Apply(text, "U", Underline);
             text = Apply(text, "W", Width);
             text = Apply(text, "Z", HardSpace); // replaced from ~
 
-            //text = Braces(text);
+            text = Braces(text);
 
             return text;
         }

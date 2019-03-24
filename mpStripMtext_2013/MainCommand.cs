@@ -1,5 +1,6 @@
 ﻿namespace mpStripMtext
 {
+    using System;
     using AcApp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@
     using ModPlusAPI;
     using ModPlusAPI.Annotations;
     using ModPlusAPI.Windows;
+    using Exception = Autodesk.AutoCAD.Runtime.Exception;
 
     public class MainCommand
     {
@@ -167,20 +169,53 @@
         private ObservableCollection<StripFormatItem> GetStripFormatItems()
         {
             // todo localization
-            ObservableCollection<StripFormatItem> stripFormatItems = new ObservableCollection<StripFormatItem>
+            List<StripFormatItem> stripFormatItems = new List<StripFormatItem>
             {
                 new StripFormatItem("A",
-                    "Alignment",
-                    ""),
-                new StripFormatItem("B", "Tabs", ""),
-                new StripFormatItem("C", "Color", ""),
-                new StripFormatItem("D", "Fields", ""),
-                new StripFormatItem("F", "Font", ""),
-                new StripFormatItem("H", "Height", ""),
-                new StripFormatItem("L", "Linefeed", ""),
-                new StripFormatItem("M", "Background Mask", ""),
-                new StripFormatItem("N", "Columns", ""),
-                new StripFormatItem("O", "Overline", ""),
+                    // Выравнивание (Alignment)
+                    Language.GetItem(LangItem, "s1"),
+                    // Вертикальное выравнивание. Возможные значения: вниз, по центру, вверх. Вертикальное выравнивание появляется при наличии в тексте дробей
+                    Language.GetItem(LangItem, "st1")),
+                new StripFormatItem("B", 
+                    // Табуляция (Tabs)
+                    Language.GetItem(LangItem, "s2"),
+                    Language.GetItem(LangItem, "st2")),
+                new StripFormatItem("C",
+                    // Цвет (Color)
+                    Language.GetItem(LangItem, "s3"),
+                    Language.GetItem(LangItem, "st3")),
+                new StripFormatItem("D", 
+                    // Поля (Fields)
+                    Language.GetItem(LangItem, "s4"),
+                    Language.GetItem(LangItem, "st4")),
+                new StripFormatItem("F", 
+                    // Шрифт (Font)
+                    Language.GetItem(LangItem, "s5"),
+                    Language.GetItem(LangItem, "st5")),
+                new StripFormatItem("H", 
+                    // Высота (Height)
+                    Language.GetItem(LangItem, "s6"),
+                    Language.GetItem(LangItem, "st6")),
+                new StripFormatItem("K", 
+                    // Перечеркивание (Strikethrough)
+                    Language.GetItem(LangItem, "s7"),
+                    Language.GetItem(LangItem, "st7")),
+                new StripFormatItem("L", 
+                    // Переводы строк (Linefeeds)
+                    Language.GetItem(LangItem, "s8"),
+                    Language.GetItem(LangItem, "st8")),
+                new StripFormatItem("M", 
+                    // Маска (Mask)
+                    Language.GetItem(LangItem, "s9"),
+                    Language.GetItem(LangItem, "st9")),
+                new StripFormatItem("N", 
+                    // Столбцы (Columns)
+                    Language.GetItem(LangItem, "s10"),
+                    Language.GetItem(LangItem, "st10")),
+                new StripFormatItem("O", 
+                    // Надчеркивание (Overline)
+                    Language.GetItem(LangItem, "s11"),
+                    Language.GetItem(LangItem, "st11")),
                 new StripFormatItem("P", "Paragraph", ""),
                 new StripFormatItem("Q", "Oblique", ""),
                 new StripFormatItem("S", "Stacking", ""),
@@ -194,7 +229,9 @@
                 stripFormatItem.Selected = bool.TryParse(UserConfigFile.GetValue(LangItem, stripFormatItem.Code), out var b) && b;
             }
 
-            return stripFormatItems;
+            stripFormatItems.Sort((i1,i2) => string.Compare(i1.DisplayName, i2.DisplayName, StringComparison.Ordinal));
+
+            return new ObservableCollection<StripFormatItem>(stripFormatItems);
         }
 
         private void SaveStripFormatItems(IEnumerable<StripFormatItem> stripFormatItems)

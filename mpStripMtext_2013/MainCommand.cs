@@ -12,7 +12,6 @@
     using ModPlusAPI;
     using ModPlusAPI.Annotations;
     using ModPlusAPI.Windows;
-    using Exception = Autodesk.AutoCAD.Runtime.Exception;
 
     public class MainCommand
     {
@@ -128,7 +127,7 @@
                 var selection = GetSelection();
                 return SelectionSetToObjectSet(selection, tr);
             }
-            catch (Exception exception)
+            catch (System.Exception exception)
             {
                 ExceptionBox.Show(exception);
                 return new ObjectSet();
@@ -216,13 +215,38 @@
                     // Надчеркивание (Overline)
                     Language.GetItem(LangItem, "s11"),
                     Language.GetItem(LangItem, "st11")),
-                new StripFormatItem("P", "Paragraph", ""),
-                new StripFormatItem("Q", "Oblique", ""),
-                new StripFormatItem("S", "Stacking", ""),
-                new StripFormatItem("T", "Tracking", ""),
-                new StripFormatItem("U", "Underline", ""),
-                new StripFormatItem("W", "Width", ""),
-                new StripFormatItem("Z", "Non-breaking space", ""),
+                new StripFormatItem("P",
+                    // Абзац (Paragraph)
+                    Language.GetItem(LangItem, "s12"),
+                    Language.GetItem(LangItem, "st12")),
+                new StripFormatItem("Q",
+                    // Наклон (Oblique)
+                    Language.GetItem(LangItem, "s13"),
+                    Language.GetItem(LangItem, "st13")),
+                new StripFormatItem("S", 
+                    // Дроби (Stacking)
+                    Language.GetItem(LangItem, "s14"),
+                    Language.GetItem(LangItem, "st14")),
+                new StripFormatItem("T",
+                    // Межстрочный интервал (Tracking)
+                    Language.GetItem(LangItem, "s15"),
+                    Language.GetItem(LangItem, "st15")),
+                new StripFormatItem("U",
+                    // Подчеркивание (Underline)
+                    Language.GetItem(LangItem, "s16"),
+                    Language.GetItem(LangItem, "st16")),
+                new StripFormatItem("W", 
+                    // Коэффициент растяжения (Width)
+                    Language.GetItem(LangItem, "s17"),
+                    Language.GetItem(LangItem, "st17")),
+                new StripFormatItem("Z", 
+                    // Неразрывный пробел (Non-breaking space)
+                    Language.GetItem(LangItem, "s18"),
+                    Language.GetItem(LangItem, "st18")),
+                new StripFormatItem("X", 
+                    // Выравнивание абзаца (Paragraph alignment)
+                    Language.GetItem(LangItem, "s19"),
+                    Language.GetItem(LangItem, "st19"))
             };
             foreach (var stripFormatItem in stripFormatItems)
             {

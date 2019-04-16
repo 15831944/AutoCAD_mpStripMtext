@@ -117,28 +117,10 @@
 
                 return oldStr;
             }
-
-            ////List<Match> Execute(Regex pat, string s)
-            ////{
-            ////    var result = new List<Match>();
-            ////    if (pat.IsMatch(s))
-            ////    {
-            ////        foreach (Match match in pat.Matches(s))
-            ////        {
-            ////            result.Add(match);
-            ////        }
-            ////        return result;
-            ////    }
-            ////    else
-            ////    {
-            ////        return result;
-            ////    }
-            ////}
-
+            
             // Replace linefeeds using this format "\n" with the AutoCAD
             // standard format "\P". The "\n" format occurs when text is
             // copied to ACAD from some other application.
-
             var resultString = Replace("\\P", new Regex("\\n"), symbolString);
 
             //A format
@@ -177,7 +159,7 @@
                 return Replace(string.Empty, new Regex("\\\\[Oo]"), str);
             }
 
-            //O format
+            //P format
             string Paragraph(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\P"), str);
@@ -239,6 +221,12 @@
                 return Replace(" ", new Regex("{\\\\[Ff](.*?)\\\\~}|\\\\~"), str);
             }
 
+            // X format (Paragraph alignment)
+            string ParagraphAlignment(string str)
+            {
+                return Replace(string.Empty, new Regex("\\\\p.*?;"), str);
+            }
+
             string Braces(string str)
             {
                 var noBracesText = Replace(string.Empty, new Regex("[{}]"), str);
@@ -258,13 +246,9 @@
             string Apply(string t, string token, Func<string, string> f)
             {
                 if (formatsAsList.Contains(token))
-                {
                     return f(t);
-                }
-                else
-                {
-                    return t;
-                }
+
+                return t;
             }
 
             var text = resultString;
@@ -276,6 +260,7 @@
             text = Apply(text, "H", Height);
             text = Apply(text, "O", Overline);
             text = Apply(text, "Q", Oblique);
+            text = Apply(text, "X", ParagraphAlignment);
             text = Apply(text, "P", Paragraph);
             text = Apply(text, "S", Stacking);
             text = Apply(text, "K", StrikeThrough);
@@ -283,7 +268,9 @@
             text = Apply(text, "U", Underline);
             text = Apply(text, "W", Width);
             text = Apply(text, "Z", HardSpace); // replaced from ~
-
+            text = Apply(text, "S", Stacking);
+            text = Apply(text, "K", StrikeThrough);
+            
             text = Braces(text);
 
             return text;

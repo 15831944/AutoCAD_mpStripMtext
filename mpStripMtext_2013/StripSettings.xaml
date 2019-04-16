@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mps="https://modplus.org/winfx/xaml/controls"
              xmlns:local="clr-namespace:mpStripMtext" ResizeMode="NoResize"
-             Height="300" Width="480">
+             SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,7 +23,8 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" 
                   Header="{Binding Source={StaticResource Lang}, XPath=h1}">
-            <ListBox Margin="0" BorderThickness="0" Name="LbFormatItems">
+            <ListBox Margin="0" BorderThickness="0" Name="LbFormatItems"
+                     Width="450" Height="300">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource ModPlusListBoxItem}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>

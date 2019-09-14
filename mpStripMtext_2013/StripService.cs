@@ -278,7 +278,9 @@
 
         public void StripColumn(MText mText)
         {
-            mText.ColumnType = ColumnType.NoColumns;
+            // https://adndevblog.typepad.com/autocad/2018/04/set-columntype-of-mtext-on-creation-of-mtext-object.html
+            if (mText.Width > 0.0)
+                mText.ColumnType = ColumnType.NoColumns;
         }
 
         public void StripTableFields(Table table)

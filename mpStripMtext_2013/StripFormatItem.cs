@@ -34,7 +34,8 @@
             get => _selected;
             set
             {
-                if (Equals(value, _selected)) return;
+                if (Equals(value, _selected)) 
+                    return;
                 _selected = value;
                 OnPropertyChanged();
             }

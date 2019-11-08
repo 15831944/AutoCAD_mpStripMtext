@@ -1,7 +1,6 @@
 ﻿namespace mpStripMtext
 {
     using System;
-    using AcApp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -12,6 +11,7 @@
     using ModPlusAPI;
     using ModPlusAPI.Annotations;
     using ModPlusAPI.Windows;
+    using AcApp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 
     public class MainCommand
     {
@@ -25,12 +25,12 @@
             try
             {
                 _doc = AcApp.DocumentManager.MdiActiveDocument;
-                using (Transaction tr = _doc.TransactionManager.StartTransaction())
+                using (var tr = _doc.TransactionManager.StartTransaction())
                 {
                     var objectSet = GetObjectSet(tr);
                     if (!objectSet.IsEmpty)
                     {
-                        StripSettings win = new StripSettings
+                        var win = new StripSettings
                         {
                             LbFormatItems =
                         {
@@ -41,8 +41,7 @@
                         {
                             var stripFormatItems = win.LbFormatItems.ItemsSource.Cast<StripFormatItem>().ToList();
                             SaveStripFormatItems(stripFormatItems);
-                            List<string> formats = stripFormatItems.Where(i => i.Selected).Select(i => i.Code).ToList();
-
+                            var formats = stripFormatItems.Where(i => i.Selected).Select(i => i.Code).ToList();
 
                             var stripService = new StripService(_doc, tr);
 
@@ -68,42 +67,44 @@
                                 objectSet.Mattobjlst.ForEach(obj => stripService.StripMask(obj));
                             }
 
-                            formats = formats.Except(new List<string>() { "D", "M", "N" }).ToList();
+                            formats = formats.Except(new List<string> { "D", "M", "N" }).ToList();
                             if (formats.Any())
                             {
-                                foreach (MText mText in objectSet.Mtextobjlst)
+                                foreach (var mText in objectSet.Mtextobjlst)
                                 {
                                     var s = stripService.StripFormat(stripService.GetTextContents(mText), formats);
                                     mText.Contents = s;
                                 }
 
-                                foreach (MLeader mLeader in objectSet.Mldrobjlst)
+                                foreach (var mLeader in objectSet.Mldrobjlst)
                                 {
                                     stripService.StripMLeader(mLeader, formats);
                                 }
 
-                                foreach (Dimension dimension in objectSet.Dimobjlst)
+                                foreach (var dimension in objectSet.Dimobjlst)
                                 {
                                     var s = stripService.StripFormat(stripService.GetTextContents(dimension), formats);
                                     dimension.DimensionText = s;
                                 }
 
-                                foreach (AttributeReference attributeReference in objectSet.Mattobjlst)
+                                foreach (var attributeReference in objectSet.Mattobjlst)
                                 {
                                     stripService.StripMAttribute(attributeReference, formats);
                                 }
 
-                                foreach (Table table in objectSet.Tableobjlst)
+                                foreach (var table in objectSet.Tableobjlst)
                                 {
                                     stripService.StripTable(table, formats);
                                 }
                             }
-
                         }
 
                         tr.Commit();
                     }
-                    else tr.Abort();
+                    else
+                    {
+                        tr.Abort();
+                    }
                 }
             }
             catch (System.Exception exception)
@@ -148,7 +149,6 @@
         [CanBeNull]
         private SelectionSet GetSelection()
         {
-
             var ed = _doc.Editor;
 
             var promptSelectionOptions = new PromptSelectionOptions();
@@ -165,85 +165,104 @@
             return null;
         }
 
+#pragma warning disable SA1515 // Single-line comment should be preceded by blank line
         private ObservableCollection<StripFormatItem> GetStripFormatItems()
         {
-            // todo localization
-            List<StripFormatItem> stripFormatItems = new List<StripFormatItem>
+            var stripFormatItems = new List<StripFormatItem>
             {
-                new StripFormatItem("A",
+                new StripFormatItem(
+                    "A",
                     // Выравнивание (Alignment)
                     Language.GetItem(LangItem, "s1"),
                     // Вертикальное выравнивание. Возможные значения: вниз, по центру, вверх. Вертикальное выравнивание появляется при наличии в тексте дробей
                     Language.GetItem(LangItem, "st1")),
-                new StripFormatItem("B", 
+                new StripFormatItem(
+                    "B", 
                     // Табуляция (Tabs)
                     Language.GetItem(LangItem, "s2"),
                     Language.GetItem(LangItem, "st2")),
-                new StripFormatItem("C",
+                new StripFormatItem(
+                    "C",
                     // Цвет (Color)
                     Language.GetItem(LangItem, "s3"),
                     Language.GetItem(LangItem, "st3")),
-                new StripFormatItem("D", 
+                new StripFormatItem(
+                    "D", 
                     // Поля (Fields)
                     Language.GetItem(LangItem, "s4"),
                     Language.GetItem(LangItem, "st4")),
-                new StripFormatItem("F", 
+                new StripFormatItem(
+                    "F", 
                     // Шрифт (Font)
                     Language.GetItem(LangItem, "s5"),
                     Language.GetItem(LangItem, "st5")),
-                new StripFormatItem("H", 
+                new StripFormatItem(
+                    "H", 
                     // Высота (Height)
                     Language.GetItem(LangItem, "s6"),
                     Language.GetItem(LangItem, "st6")),
-                new StripFormatItem("K", 
+                new StripFormatItem(
+                    "K", 
                     // Перечеркивание (Strikethrough)
                     Language.GetItem(LangItem, "s7"),
                     Language.GetItem(LangItem, "st7")),
-                new StripFormatItem("L", 
+                new StripFormatItem(
+                    "L", 
                     // Переводы строк (Linefeeds)
                     Language.GetItem(LangItem, "s8"),
                     Language.GetItem(LangItem, "st8")),
-                new StripFormatItem("M", 
+                new StripFormatItem(
+                    "M", 
                     // Маска (Mask)
                     Language.GetItem(LangItem, "s9"),
                     Language.GetItem(LangItem, "st9")),
-                new StripFormatItem("N", 
+                new StripFormatItem(
+                    "N", 
                     // Столбцы (Columns)
                     Language.GetItem(LangItem, "s10"),
                     Language.GetItem(LangItem, "st10")),
-                new StripFormatItem("O", 
+                new StripFormatItem(
+                    "O", 
                     // Надчеркивание (Overline)
                     Language.GetItem(LangItem, "s11"),
                     Language.GetItem(LangItem, "st11")),
-                new StripFormatItem("P",
+                new StripFormatItem(
+                    "P",
                     // Абзац (Paragraph)
                     Language.GetItem(LangItem, "s12"),
                     Language.GetItem(LangItem, "st12")),
-                new StripFormatItem("Q",
+                new StripFormatItem(
+                    "Q",
                     // Наклон (Oblique)
                     Language.GetItem(LangItem, "s13"),
                     Language.GetItem(LangItem, "st13")),
-                new StripFormatItem("S", 
+                new StripFormatItem(
+                    "S", 
                     // Дроби (Stacking)
                     Language.GetItem(LangItem, "s14"),
                     Language.GetItem(LangItem, "st14")),
-                new StripFormatItem("T",
+                new StripFormatItem(
+                    "T",
                     // Межстрочный интервал (Tracking)
                     Language.GetItem(LangItem, "s15"),
                     Language.GetItem(LangItem, "st15")),
-                new StripFormatItem("U",
+                new StripFormatItem(
+                    "U",
                     // Подчеркивание (Underline)
                     Language.GetItem(LangItem, "s16"),
                     Language.GetItem(LangItem, "st16")),
-                new StripFormatItem("W", 
+                new StripFormatItem(
+                    "W", 
                     // Коэффициент растяжения (Width)
                     Language.GetItem(LangItem, "s17"),
                     Language.GetItem(LangItem, "st17")),
-                new StripFormatItem("Z", 
+                new StripFormatItem(
+                    "Z", 
                     // Неразрывный пробел (Non-breaking space)
                     Language.GetItem(LangItem, "s18"),
                     Language.GetItem(LangItem, "st18")),
-                new StripFormatItem("X", 
+                new StripFormatItem(
+                    "X", 
                     // Выравнивание абзаца (Paragraph alignment)
                     Language.GetItem(LangItem, "s19"),
                     Language.GetItem(LangItem, "st19"))
@@ -253,10 +272,11 @@
                 stripFormatItem.Selected = bool.TryParse(UserConfigFile.GetValue(LangItem, stripFormatItem.Code), out var b) && b;
             }
 
-            stripFormatItems.Sort((i1,i2) => string.Compare(i1.DisplayName, i2.DisplayName, StringComparison.Ordinal));
+            stripFormatItems.Sort((i1, i2) => string.Compare(i1.DisplayName, i2.DisplayName, StringComparison.Ordinal));
 
             return new ObservableCollection<StripFormatItem>(stripFormatItems);
         }
+#pragma warning restore SA1515 // Single-line comment should be preceded by blank line
 
         private void SaveStripFormatItems(IEnumerable<StripFormatItem> stripFormatItems)
         {
@@ -270,15 +290,15 @@
 
         private ObjectSet SelectionSetToObjectSet(SelectionSet selectionSet, Transaction tr)
         {
-            ObjectSet objectSet = new ObjectSet();
+            var objectSet = new ObjectSet();
             if (selectionSet == null)
                 return objectSet;
 
-            ObjectId[] objIds = selectionSet.GetObjectIds();
+            var objIds = selectionSet.GetObjectIds();
 
-            foreach (ObjectId objId in objIds)
+            foreach (var objId in objIds)
             {
-                DBObject obj = tr.GetObject(objId, OpenMode.ForWrite);
+                var obj = tr.GetObject(objId, OpenMode.ForWrite);
                 if (!(obj is Entity))
                 {
                     obj.Dispose();
@@ -322,7 +342,8 @@
                         if (attributeReference == null
                             || !attributeReference.IsMTextAttribute
                             || attributeReference.MTextAttribute == null
-                        ) continue;
+                        )
+                            continue;
                         var layerTableRecord =
                             tr.GetObject(attributeReference.LayerId, OpenMode.ForRead) as LayerTableRecord;
                         if (layerTableRecord != null && layerTableRecord.IsLocked)

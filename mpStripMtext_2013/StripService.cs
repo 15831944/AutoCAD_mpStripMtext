@@ -32,6 +32,7 @@
                     d.Remove("ACAD_FIELD");
                 }
             }
+
             return text;
         }
 
@@ -107,7 +108,6 @@
 
         public string StripFormat(string symbolString, List<string> formatsAsList)
         {
-
             string Replace(string newStr, Regex pat, string oldStr)
             {
                 if (pat.IsMatch(oldStr))
@@ -123,55 +123,55 @@
             // copied to ACAD from some other application.
             var resultString = Replace("\\P", new Regex("\\n"), symbolString);
 
-            //A format
+            // A format
             string Alignment(string oldStr)
             {
                 return Replace(string.Empty, new Regex("\\\\A[012];"), oldStr);
             }
 
-            //B format
+            // B format
             string Tab(string str)
             {
                 return Replace(" ", new Regex("\\t"), str);
             }
 
-            //C format
+            // C format
             string Color(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\[Cc]\\d*;"), str);
             }
 
-            //F format
+            // F format
             string Font(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\[Ff].*?;"), str);
             }
 
-            //H format
+            // H format
             string Height(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\H[0-9]*?[.]?[0-9]*?(x|X)+;"), str);
             }
 
-            //O format
+            // O format
             string Overline(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\[Oo]"), str);
             }
 
-            //P format
+            // P format
             string Paragraph(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\P"), str);
             }
 
-            //Q format
+            // Q format
             string Oblique(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\Q[-]?[0-9]*?[.]?[0-9]+;"), str);
             }
 
-            //S format
+            // S format
             string Stacking(string str)
             {
                 var kRegex = new Regex("{\\\\S(?<numbers>\\s*\\d+\\/\\d+);");
@@ -185,7 +185,7 @@
                 return Stacking(str);
             }
 
-            //K format
+            // K format
             string StrikeThrough(string str)
             {
                 var kRegex = new Regex("{\\\\K(?<text>.?)}");
@@ -197,25 +197,25 @@
                 return StrikeThrough(str);
             }
 
-            //T format
+            // T format
             string Tracking(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\T[0-9]?[.]?[0-9]+;"), str);
             }
 
-            //U format
+            // U format
             string Underline(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\[Ll]"), str);
             }
 
-            //W format
+            // W format
             string Width(string str)
             {
                 return Replace(string.Empty, new Regex("\\\\W[0-9]?[.]?[0-9]+;"), str);
             }
 
-            //~ format (Z)
+            // ~ format (Z)
             string HardSpace(string str)
             {
                 return Replace(" ", new Regex("{\\\\[Ff](.*?)\\\\~}|\\\\~"), str);
@@ -234,14 +234,14 @@
                 return noBracesText;
             }
 
-            //var slahFlag = $"<{DateTime.Now.Ticks}>";
-            //var text = Replace(slahFlag, new Regex("\\\\\\\\"), resultString);
+            // var slahFlag = $"<{DateTime.Now.Ticks}>";
+            // var text = Replace(slahFlag, new Regex("\\\\\\\\"), resultString);
 
-            //var lbrace = $"<L{DateTime.Now.Ticks}>";
-            //text = Replace(slahFlag, new Regex("\\\\{"), text);
+            // var lbrace = $"<L{DateTime.Now.Ticks}>";
+            // text = Replace(slahFlag, new Regex("\\\\{"), text);
 
-            //var rbrace = $"<{DateTime.Now.Ticks}R>";
-            //text = Replace(slahFlag, new Regex("\\\\}"), text);
+            // var rbrace = $"<{DateTime.Now.Ticks}R>";
+            // text = Replace(slahFlag, new Regex("\\\\}"), text);
 
             string Apply(string t, string token, Func<string, string> f)
             {
@@ -291,7 +291,7 @@
                 {
                     for (int c = 0; c < table.Columns.Count; c++)
                     {
-                        //Get the cell and its contents
+                        // Get the cell and its contents
                         Cell cell = table.Cells[r, c];
                         if (!string.IsNullOrEmpty(cell.TextString))
                         {
@@ -310,7 +310,7 @@
                 {
                     for (int c = 0; c < table.Columns.Count; c++)
                     {
-                        //Get the cell and its contents
+                        // Get the cell and its contents
                         Cell cell = table.Cells[r, c];
                         if (!string.IsNullOrEmpty(cell.TextString))
                         {
@@ -364,6 +364,7 @@
                     var d = _tr.GetObject(obj.ExtensionDictionary, OpenMode.ForWrite);
                     d?.Erase();
                 }
+
                 return true;
             }
             catch

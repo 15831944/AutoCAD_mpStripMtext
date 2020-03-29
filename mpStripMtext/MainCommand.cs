@@ -8,8 +8,8 @@
     using Autodesk.AutoCAD.DatabaseServices;
     using Autodesk.AutoCAD.EditorInput;
     using Autodesk.AutoCAD.Runtime;
+    using JetBrains.Annotations;
     using ModPlusAPI;
-    using ModPlusAPI.Annotations;
     using ModPlusAPI.Windows;
     using AcApp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 
